@@ -46,9 +46,15 @@ export const IssueFilter = styled.div`
     margin-top: 30px;
     select {
         flex: 1;
+        color: #fff;
         padding: 5px 10px;
         border-radius: 4px;
         font-size: 14px;
+        border: 1px solid #fff;
+        background-color: transparent;
+        option {
+            background-color: #3e2f5b;
+        }
     }
 `;
 
@@ -105,4 +111,10 @@ export const IssuesList = styled.ul`
             color: #999;
         }
     }
+`;
+
+export const PageArrows = styled.button`
+    background: none;
+    border: none;
+    color: #fff;
 `;

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
 import PropTypes from 'prop-types';
-import { Loading, Owner, IssuesList, IssueFilter } from './styles';
-import { FaArrowLeft } from 'react-icons/fa';
+import { Loading, Owner, IssuesList, IssueFilter, PageArrows } from './styles';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import Container from '../../components/Container';
 import { Link } from 'react-router-dom';
 
@@ -18,11 +18,15 @@ export default class Repository extends Component {
     state = {
         repository: {},
         issues: [],
-        loading: true
+        loading: true,
+        page: 1
     };
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const { match } = this.props;
+        console.log(match);
+
+        console.log(this.state.page);
 
         const repoName = decodeURIComponent(match.params.repository);
 
@@ -31,7 +35,7 @@ export default class Repository extends Component {
             api.get(`/repos/${repoName}/issues`, {
                 params: {
                     state: 'all',
-                    per_page: 10
+                    page: 1
                 }
             })
         ]);
@@ -41,7 +45,7 @@ export default class Repository extends Component {
             issues: issues.data,
             loading: false
         });
-    }
+    };
 
     handleSelect = async e => {
         const repoName = this.state.repository.full_name;
@@ -58,6 +62,40 @@ export default class Repository extends Component {
         });
     };
 
+    handlePageUp = async e => {
+        const repoName = this.state.repository.full_name;
+        const page = this.state.page + 1;
+        const issues = await api.get(`/repos/${repoName}/issues`, {
+            params: {
+                page: page
+            }
+        });
+
+        this.setState({
+            issues: issues.data,
+            page: page
+        });
+    };
+
+    handlePageDown = async e => {
+        const repoName = this.state.repository.full_name;
+        let page = this.state.page;
+        if (this.state.page > 1) {
+            console.log('no of');
+            page = this.state.page - 1;
+        }
+        const issues = await api.get(`/repos/${repoName}/issues`, {
+            params: {
+                page: page
+            }
+        });
+
+        this.setState({
+            issues: issues.data,
+            page: page
+        });
+    };
+
     render() {
         const { repository, issues } = this.state;
         if (this.state.loading) {
@@ -69,7 +107,6 @@ export default class Repository extends Component {
                     <Link to="/">
                         <FaArrowLeft /> Voltar
                     </Link>
-
                     <Owner>
                         <img
                             src={repository.owner.avatar_url}
@@ -78,7 +115,6 @@ export default class Repository extends Component {
                         <h1>{repository.name}</h1>
                         <p>{repository.description}</p>
                     </Owner>
-
                     <IssueFilter>
                         <label style={{ marginRight: 10 }}>
                             Status da issue:
@@ -92,7 +128,6 @@ export default class Repository extends Component {
                             <option value="closed">Fechadas</option>
                         </select>
                     </IssueFilter>
-
                     <IssuesList>
                         {issues.map(issue => (
                             <li key={String(issue.id)}>
@@ -116,6 +151,22 @@ export default class Repository extends Component {
                             </li>
                         ))}
                     </IssuesList>
+                    <div style={{ textAlign: 'center', paddingTop: 20 }}>
+                        <PageArrows
+                            onClick={this.handlePageDown}
+                            style={{ margin: 10 }}
+                            // disabled={this.state.page}
+                        >
+                            <FaArrowLeft />
+                        </PageArrows>
+
+                        <PageArrows
+                            onClick={this.handlePageUp}
+                            style={{ margin: 10 }}
+                        >
+                            <FaArrowRight></FaArrowRight>
+                        </PageArrows>
+                    </div>
                 </Container>
             </>
         );
