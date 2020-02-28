@@ -42,10 +42,20 @@ export const Owner = styled.header`
     }
 `;
 
+export const IssueFilter = styled.div`
+    margin-top: 30px;
+    select {
+        flex: 1;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+`;
+
 export const IssuesList = styled.ul`
     padding-top: 30px;
     margin-top: 30px;
-    border-top: 1px solid #eee;
+
     list-style: none;
 
     li {

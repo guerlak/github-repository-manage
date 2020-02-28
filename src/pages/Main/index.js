@@ -40,8 +40,8 @@ export default class Main extends Component {
             const check = this.state.repositories.filter(
                 repo => repo.name == this.state.newRepo
             );
-
-            if (check) {
+            console.log(check.length);
+            if (check.length >= 1) {
                 throw new Error('Repository duplicate');
             }
             const { newRepo, repositories } = this.state;
