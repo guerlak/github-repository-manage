@@ -1,8 +1,8 @@
 import styled, { keyframes, css } from 'styled-components';
 
-export const Title = styled.h1`
-    font-size: 24px;
-    color: ${props => (props.error ? 'red' : '#7159c1')};
+export const Title = styled.h2`
+    font-size: 22px;
+    color: ${props => props.inputColor};
 `;
 
 export const Form = styled.form`
@@ -12,19 +12,19 @@ export const Form = styled.form`
 
     input {
         flex: 1;
-        border: 1px solid;
         padding: 10px 15px;
         border-radius: 4px;
         font-size: 16px;
+        border: 1px solid ${props => props.inputColor};
     }
 `;
 
 const rotate = keyframes`
-from{
-    transform: rotate(0deg)
-}to{
-    transform: rotate(360deg)
-}`;
+    from{
+        transform: rotate(0deg)
+    }to{
+        transform: rotate(360deg)
+    }`;
 
 export const SubmitBtn = styled.button.attrs(props => ({
     type: 'submit',

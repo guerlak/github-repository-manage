@@ -19,6 +19,10 @@ const Container = styled.div`
             color: #fff;
         }
     }
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
 `;
 
 export default Container;

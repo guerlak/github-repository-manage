@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import api from '../../services/api';
 import PropTypes from 'prop-types';
 import { Loading, Owner, IssuesList } from './styles';
+import { FaArrowLeft } from 'react-icons/fa';
 import Container from '../../components/Container';
 import { Link } from 'react-router-dom';
 
@@ -49,8 +50,10 @@ export default class Repository extends Component {
         return (
             <>
                 <Container>
+                    <Link to="/">
+                        <FaArrowLeft /> Voltar
+                    </Link>
                     <Owner>
-                        <Link to="/">Voltar</Link>
                         <img
                             src={repository.owner.avatar_url}
                             alt={repository.owner.login}

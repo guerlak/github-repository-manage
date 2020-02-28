@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import RepositoryItem from '../../components/RepositoryItem/index';
 
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
-import { Form, SubmitBtn, List } from './styles';
+import { Form, SubmitBtn, List, Title } from './styles';
 import Container from '../../components/Container';
 import api from '../../services/api';
 
@@ -11,7 +11,8 @@ export default class Main extends Component {
     state = {
         newRepo: '',
         repositories: [],
-        loading: false
+        loading: false,
+        inputColor: 'grey'
     };
 
     componentDidMount() {
@@ -33,34 +34,49 @@ export default class Main extends Component {
     };
     handleSubmit = async e => {
         e.preventDefault();
-        this.setState({ loading: true });
-        const { newRepo, repositories } = this.state;
-        const response = await api.get(`/repos/${newRepo}`);
-        const data = {
-            name: response.data.full_name
-        };
-        this.setState({
-            repositories: [...repositories, data],
-            newRepo: ''
-        });
+
+        try {
+            this.setState({ loading: true });
+            const check = this.state.repositories.filter(
+                repo => repo.name == this.state.newRepo
+            );
+
+            if (check) {
+                throw new Error('Repository duplicate');
+            }
+            const { newRepo, repositories } = this.state;
+            const response = await api.get(`/repos/${newRepo}`);
+            const data = {
+                name: response.data.full_name
+            };
+            this.setState({
+                repositories: [...repositories, data],
+                newRepo: '',
+                inputColor: 'grey'
+            });
+        } catch (err) {
+            this.setState({ inputColor: 'red' });
+            console.log(err.message);
+        }
         this.setState({ loading: false });
     };
 
     render() {
-        const { newRepo, repositories, loading } = this.state;
+        const { newRepo, repositories, loading, inputColor } = this.state;
         return (
             <Container>
+                {/* <Title inputColor={inputColor}>Testing</Title> */}
                 <h1>
                     <FaGithubAlt />
                     Repositorios
                 </h1>
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.handleSubmit} inputColor={inputColor}>
                     <input
                         type="text"
                         placeholder="Adicionar Repositorio"
                         onChange={this.handleInputChange}
                         value={newRepo}
-                    ></input>
+                    />
 
                     <SubmitBtn loading={loading}>
                         {loading ? (
